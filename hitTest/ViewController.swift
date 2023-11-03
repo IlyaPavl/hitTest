@@ -10,18 +10,18 @@ import UIKit
 final class ViewController: UIViewController {
     
     let viewA = Subview()
-    let viewB = Subview()
+    let viewB = PassTouchView()
     let viewC = ExpandedView()
-    let viewD = Subview()
-
+    let viewD = PassTouchView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupViewDesign()
         setupConstraints()
         
-        viewD.isUserInteractionEnabled = false
-        viewB.isUserInteractionEnabled = false
+//        viewD.isUserInteractionEnabled = false
+//        viewB.isUserInteractionEnabled = false
     }
     
     private func setupViewDesign() {
@@ -70,7 +70,7 @@ final class ViewController: UIViewController {
         viewB.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewBTouched(tapGestureRecognizer: ))))
         viewC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewCTouched(tapGestureRecognizer: ))))
         viewD.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewDTouched(tapGestureRecognizer: ))))
-
+        
     }
     
     @objc func viewTouched(tapGestureRecognizer: UITapGestureRecognizer) {
@@ -97,7 +97,7 @@ final class ViewController: UIViewController {
         view.backgroundColor = color
         view.layer.cornerRadius = cornerRadius
     }
-
+    
 }
 
 class Subview: UIView {
@@ -111,5 +111,15 @@ class Subview: UIView {
 class ExpandedView: Subview {
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         return bounds.insetBy(dx: -30, dy: -30).contains(point)
+    }
+}
+
+class PassTouchView: UIView {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        if view === self {
+            return nil
+        }
+        return view
     }
 }
